@@ -30,6 +30,12 @@ public class Selector{
     if (e.getKeyCode() == KeyEvent.VK_Q){
       showDebug = true;
     }
+    if (e.getKeyCode() == KeyEvent.VK_1&&LevelEditor.loaded==true){
+      LevelEditor.levelArray[y][x] = 'x';
+    }
+    if (e.getKeyCode() == KeyEvent.VK_2&&LevelEditor.loaded==true){
+      LevelEditor.levelArray[y][x] = 'o';
+    }
   }
   public void debug(Graphics2D g2d){
    g2d.drawString("x: " + x,50,50);

@@ -2,6 +2,8 @@
 //LOAD WITH L
 //NEW LEVEL WITH N
 //UNLOAD WITH U
+//SAVE WITH ENTER
+//CHANGE TYPE OF TILE WITH THE NUMBER KEYS
 //MORE FUNCTIONALITY COMING SOON
 
 //testtesttest
@@ -15,10 +17,11 @@ import java.io.*;
 public class LevelEditor extends JPanel{
   private Color backGroundGreen = new Color(59,206,113);  
   private Selector selector = new Selector();
-  private boolean loaded = false;
+  private String fileName = "";
   //DUDE ENCAPSULATION LMAO
   public static int tileSize = 16;
-  public char[][] levelArray = null;
+  public static boolean loaded = false;
+  public static char[][] levelArray = null;
   public static int width = 0;
   public static int height = 0;
   
@@ -44,13 +47,12 @@ public class LevelEditor extends JPanel{
           printArray();
         if(e.getKeyCode() == KeyEvent.VK_U)
           unload();
+        if(e.getKeyCode() == KeyEvent.VK_ENTER)
+          save();
       }
     });
     setFocusable(true); 
   } 
-  public void move(){
-    
-  }
   
   @Override
   public void paint(Graphics g)  {
@@ -63,16 +65,6 @@ public class LevelEditor extends JPanel{
   }
   
   public static void main(String[] args) throws InterruptedException, IOException {
-//    try{
-//      FileReader fr = new FileReader("level.txt");  
-//      BufferedReader br = new BufferedReader(fr); 
-//      String line;
-//      while((line = br.readLine()) != null){
-//      }
-//    } catch(IOException e){
-//      System.out.println("'oh fuck'");
-//      System.out.println("Exit Hamlet");
-//    }
     
     JFrame frame = new JFrame("Editor");
     LevelEditor p = new LevelEditor();
@@ -82,7 +74,6 @@ public class LevelEditor extends JPanel{
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
     while (true){
-      p.move();
       p.repaint();
       Thread.sleep(10);
     }
@@ -92,17 +83,16 @@ public class LevelEditor extends JPanel{
     InputStreamReader r = new InputStreamReader(System.in);
     BufferedReader br = new BufferedReader(r);
     System.out.println("Enter a file name, then level width, then level height");
-    String toName = "";
     try{
-      toName = br.readLine();
+      fileName = br.readLine();
       width = Integer.parseInt(br.readLine());
       height = Integer.parseInt(br.readLine());
     }
     catch (Exception e){
-      toName = "";
+      fileName = "";
     }
     try{
-      FileWriter fw = new FileWriter(toName + ".txt");
+      FileWriter fw = new FileWriter(fileName + ".txt");
     } catch (Exception e){
       System.out.println("literally how did this even happen");
     }
@@ -123,17 +113,16 @@ public class LevelEditor extends JPanel{
     BufferedReader br = new BufferedReader(r);
     
     System.out.println("file to load??");
-    String toLoad = "";
     
     try{
-      toLoad = br.readLine();
+      fileName = br.readLine();
     } 
     catch (Exception e){
-      toLoad = "";
+      fileName = "";
     }
     //load the file
     try{
-      FileReader fr = new FileReader(toLoad + ".txt");
+      FileReader fr = new FileReader(fileName + ".txt");
       BufferedReader br2 = new BufferedReader(fr);
       String line = "";
       int tempHeight = 0;
@@ -151,7 +140,7 @@ public class LevelEditor extends JPanel{
     //sigh.........
     try{
       
-      FileReader fr2 = new FileReader(toLoad + ".txt");
+      FileReader fr2 = new FileReader(fileName + ".txt");
       BufferedReader br3 = new BufferedReader(fr2);
       int currentLine = 0;
       //o lord another one im so tired i cant even think must continue at all costs
@@ -179,6 +168,7 @@ public class LevelEditor extends JPanel{
       System.out.println();
     }
   }
+  
   public void drawArray(Graphics2D g2d){
     for(int i = 0; i <= height-1; i++){
       for(int j = 0; j <= width-1; j++){
@@ -194,5 +184,23 @@ public class LevelEditor extends JPanel{
     height = 0;
     levelArray = null;
     loaded = false;
+    fileName = "";
+  }
+  public void save(){
+    try{
+  FileWriter fw = new FileWriter(fileName + ".txt");
+  PrintWriter pw = new PrintWriter(fw);
+    String currentLine = "";
+   for(int i = 0; i <= height-1; i++){
+     for(int j = 0; j <= width-1; j++){
+    currentLine = currentLine + levelArray[i][j];
+     }
+     pw.println(currentLine);
+     currentLine = "";
+   }
+   pw.close();
+    } catch(IOException e){
+    System.out.println("Save Failed");
+    }
   }
 }
