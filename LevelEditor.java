@@ -18,6 +18,7 @@ public class LevelEditor extends JPanel{
   private Color backGroundGreen = new Color(59,206,113);  
   private Selector selector = new Selector();
   private String fileName = "";
+  private EditorInput input;
   //DUDE ENCAPSULATION LMAO
   public static int tileSize = 16;
   public static boolean loaded = false;
@@ -84,13 +85,18 @@ public class LevelEditor extends JPanel{
     BufferedReader br = new BufferedReader(r);
     System.out.println("Enter a file name, then level width, then level height");
     try{
-      fileName = br.readLine();
-      width = Integer.parseInt(br.readLine());
-      height = Integer.parseInt(br.readLine());
+      input = new EditorInput(this);
     }
     catch (Exception e){
       fileName = "";
     }
+  }
+  
+  public void finishCreate(){
+    fileName = input.getName();
+    height = input.getHeight();
+    width = input.getWidth();
+    
     try{
       FileWriter fw = new FileWriter(fileName + ".txt");
     } catch (Exception e){
