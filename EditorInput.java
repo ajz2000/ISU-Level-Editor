@@ -78,7 +78,7 @@ public class EditorInput{
       inField.addActionListener(this);
       
       //Initialize JTextArea and print initial text
-      displayArea = new JTextArea("Name: \n");
+      displayArea = new JTextArea("Name: \n", 20, 6);
       
       GridBagConstraints c = new GridBagConstraints();
       c.weightx = 1.0;
