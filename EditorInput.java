@@ -9,9 +9,12 @@ public class EditorInput{
   private InputField i;
   protected boolean closed = false;
   protected LevelEditor le;
+  //If create is true, create level, else, load level.
+  protected boolean create;
   
-  public EditorInput(LevelEditor le){
+  public EditorInput(LevelEditor le, boolean create){
     this.le = le;
+    this.create = create;
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
       public void run() {
         createFrame();
@@ -42,6 +45,11 @@ public class EditorInput{
     return i.name; 
   }
   
+  public String getLoad()
+  {
+    return i.loadName; 
+  }
+  
   public int getWidth()
   {
     return Integer.parseInt(i.width); 
@@ -66,6 +74,9 @@ public class EditorInput{
     String name;
     String height;
     String width;
+    
+    //String for file to load.
+    String loadName;
     
     public InputField()
     {
@@ -94,42 +105,63 @@ public class EditorInput{
     @Override
     public void actionPerformed(ActionEvent e)
     {
-      switch(inCount)
-      {
-        case 0:
-          //Set variable to text in JTextField
-          name = inField.getText();
-          //Show new ext in JTextArea.
-          displayArea.append(name + "\n");
-          displayArea.append("Height: \n");
-          //Highlight text.
-          inField.selectAll();
-          inCount++;
-          break;
-        case 1:
-          //Set variable to text in JTextField
-          height = inField.getText();
-          //Show new ext in JTextArea.
-          displayArea.append(height + "\n");
-          displayArea.append("Width: \n");
-          //Highlight text.
-          inField.selectAll();
-          inCount++;
-          break;
-        case 2:
-          //Set variable to text in JTextField
-          width = inField.getText();
-          //Show new ext in JTextArea.
-          displayArea.append(width + "\n");
-          displayArea.append("Press enter to close.");
-          //Highlight text.
-          inField.selectAll();
-          inCount++;
-          break;
-        default:
-          //Get rid of frame.
-          frame.dispose();
-          le.finishCreate();
+      if(create){
+        switch(inCount)
+        {
+          case 0:
+            //Set variable to text in JTextField
+            name = inField.getText();
+            //Show new text in JTextArea.
+            displayArea.append(name + "\n");
+            displayArea.append("Height: \n");
+            //Highlight text.
+            inField.selectAll();
+            inCount++;
+            break;
+          case 1:
+            //Set variable to text in JTextField
+            height = inField.getText();
+            //Show new text in JTextArea.
+            displayArea.append(height + "\n");
+            displayArea.append("Width: \n");
+            //Highlight text.
+            inField.selectAll();
+            inCount++;
+            break;
+          case 2:
+            //Set variable to text in JTextField
+            width = inField.getText();
+            //Show new text in JTextArea.
+            displayArea.append(width + "\n");
+            displayArea.append("Press enter to close.");
+            //Highlight text.
+            inField.selectAll();
+            inCount++;
+            break;
+          default:
+            //Get rid of frame.
+            frame.dispose();
+            //Finish creating in LevelEditor.
+            le.finishCreate();
+        }
+      }
+      else{
+        switch(inCount)
+        {
+          case 0:
+            //Set variable to text in JTextField
+            loadName = inField.getText();
+            //Show new text in JTextArea.
+            displayArea.append(loadName + "\n");
+            displayArea.append("Press enter to close.");
+            inCount++;
+            break;
+          default:
+            //Get rid of frame.
+            frame.dispose();
+            //Finish loading in LevelEditor.
+            le.finishLoad();
+        }
       }
     }
   }

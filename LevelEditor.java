@@ -85,7 +85,7 @@ public class LevelEditor extends JPanel{
     BufferedReader br = new BufferedReader(r);
     System.out.println("Enter a file name, then level width, then level height");
     try{
-      input = new EditorInput(this);
+      input = new EditorInput(this, true);
     }
     catch (Exception e){
       fileName = "";
@@ -121,11 +121,15 @@ public class LevelEditor extends JPanel{
     System.out.println("file to load??");
     
     try{
-      fileName = br.readLine();
+      input = new EditorInput(this, false);
     } 
     catch (Exception e){
       fileName = "";
     }
+  }
+  
+  public void finishLoad(){
+    fileName = input.getLoad();
     //load the file
     try{
       FileReader fr = new FileReader(fileName + ".txt");
