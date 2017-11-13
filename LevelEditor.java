@@ -13,12 +13,20 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener; 
 import java.io.*;
+import javax.imageio.*;
+import java.awt.Image; 
+import java.awt.image.BufferedImage;
 
 public class LevelEditor extends JPanel{
   private Color backGroundGreen = new Color(59,206,113);  
   private Selector selector = new Selector();
   private String fileName = "";
   private EditorInput input;
+  private BufferedImage background1 = null;
+  //this says "wall one"
+  private BufferedImage wall1 = null;
+  private BufferedImage wallTop1 = null;
+  private BufferedImage character1 = null;
   //DUDE ENCAPSULATION LMAO
   public static int tileSize = 16;
   public static boolean loaded = false;
@@ -53,6 +61,13 @@ public class LevelEditor extends JPanel{
       }
     });
     setFocusable(true); 
+         try {
+      background1 = ImageIO.read(new File("background1.png"));
+      wall1 = ImageIO.read(new File("wall1.png"));
+      wallTop1 = ImageIO.read(new File("wallTop1.png"));
+      character1 = ImageIO.read(new File("character1.png"));
+    } catch (IOException e) {
+    } 
   } 
   
   @Override
@@ -60,6 +75,7 @@ public class LevelEditor extends JPanel{
     Graphics2D g2d = (Graphics2D) g;
     g2d.setColor(backGroundGreen);
     g2d.fillRect(0,0,1920,1080);
+    g2d.drawImage(background1,0,0,null);
     drawArray(g2d);
     selector.draw(g2d);
     
@@ -73,6 +89,7 @@ public class LevelEditor extends JPanel{
     frame.setSize(1000, 1000);
     frame.setVisible(true);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     
     while (true){
       p.repaint();
@@ -182,10 +199,15 @@ public class LevelEditor extends JPanel{
   public void drawArray(Graphics2D g2d){
     for(int i = 0; i <= height-1; i++){
       for(int j = 0; j <= width-1; j++){
-        if(levelArray[i][j] == 'x'){
-          g2d.setColor(Color.RED);
-          g2d.fillRect( j*LevelEditor.tileSize, i*LevelEditor.tileSize,LevelEditor.tileSize,LevelEditor.tileSize);
+        if(levelArray[i][j] == 'c'){
+          g2d.drawImage(character1,j*LevelEditor.tileSize, i*LevelEditor.tileSize-tileSize,null);
         }
+        if(levelArray[i][j] == 'x'){
+          g2d.drawImage(wall1,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+        }
+           if(levelArray[i][j] == 't'){
+             g2d.drawImage(wallTop1,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+        } 
       }
     }
   }

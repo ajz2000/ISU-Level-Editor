@@ -30,11 +30,17 @@ public class Selector{
     if (e.getKeyCode() == KeyEvent.VK_Q){
       showDebug = true;
     }
-    if (e.getKeyCode() == KeyEvent.VK_1&&LevelEditor.loaded==true){
+    if (e.getKeyCode() == KeyEvent.VK_2&&LevelEditor.loaded==true){
       LevelEditor.levelArray[y][x] = 'x';
     }
-    if (e.getKeyCode() == KeyEvent.VK_2&&LevelEditor.loaded==true){
-      LevelEditor.levelArray[y][x] = 'o';
+    if (e.getKeyCode() == KeyEvent.VK_1&&LevelEditor.loaded==true){
+      LevelEditor.levelArray[y][x] = ' ';
+    }
+     if (e.getKeyCode() == KeyEvent.VK_3&&LevelEditor.loaded==true){
+      LevelEditor.levelArray[y][x] = 't';
+    }
+     if (e.getKeyCode() == KeyEvent.VK_4&&LevelEditor.loaded==true){
+      LevelEditor.levelArray[y][x] = 'c';
     }
   }
   public void debug(Graphics2D g2d){
