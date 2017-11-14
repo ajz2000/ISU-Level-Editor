@@ -7,6 +7,11 @@ public class Selector{
   private int x = 0;
   private int y = 0;
   private Boolean showDebug = false;
+  private LevelEditor le;
+  
+  public Selector(LevelEditor le){
+    this.le = le;
+  }
   
   public void keyPressed(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_SPACE){
@@ -30,17 +35,17 @@ public class Selector{
     if (e.getKeyCode() == KeyEvent.VK_Q){
       showDebug = true;
     }
-    if (e.getKeyCode() == KeyEvent.VK_2&&LevelEditor.loaded==true){
-      LevelEditor.levelArray[y][x] = 'x';
+    if (e.getKeyCode() == KeyEvent.VK_2&&le.getLoaded()==true){
+      le.setLevelArray(y, x, 'x');
     }
-    if (e.getKeyCode() == KeyEvent.VK_1&&LevelEditor.loaded==true){
-      LevelEditor.levelArray[y][x] = ' ';
+    if (e.getKeyCode() == KeyEvent.VK_1&&le.getLoaded()==true){
+      le.setLevelArray(y, x, ' ');
     }
-     if (e.getKeyCode() == KeyEvent.VK_3&&LevelEditor.loaded==true){
-      LevelEditor.levelArray[y][x] = 't';
+     if (e.getKeyCode() == KeyEvent.VK_3&&le.getLoaded()==true){
+      le.setLevelArray(y, x, 't');
     }
-     if (e.getKeyCode() == KeyEvent.VK_4&&LevelEditor.loaded==true){
-      LevelEditor.levelArray[y][x] = 'c';
+     if (e.getKeyCode() == KeyEvent.VK_4&&le.getLoaded()==true){
+      le.setLevelArray(y, x, 'c');
     }
   }
   public void debug(Graphics2D g2d){
@@ -49,7 +54,7 @@ public class Selector{
   }
   public void draw(Graphics2D g2d){
     g2d.setColor(Color.BLACK);
-    g2d.drawRect( x*LevelEditor.tileSize, y*LevelEditor.tileSize,LevelEditor.tileSize,LevelEditor.tileSize);
+    g2d.drawRect( x*le.getTileSize(), y*le.getTileSize(),le.getTileSize(),le.getTileSize());
     if(showDebug == true)
       debug(g2d);
   }

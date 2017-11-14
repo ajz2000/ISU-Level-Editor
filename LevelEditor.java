@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 
 public class LevelEditor extends JPanel{
   private Color backGroundGreen = new Color(59,206,113);  
-  private Selector selector = new Selector();
+  private Selector selector;
   private String fileName = "";
   private EditorInput input;
   private BufferedImage background1 = null;
@@ -33,9 +33,9 @@ public class LevelEditor extends JPanel{
   private BufferedImage wallTopTR = null;
   private BufferedImage character1 = null;
   //DUDE ENCAPSULATION LMAO
-  public static int tileSize = 16;
-  public static boolean loaded = false;
-  public static char[][] levelArray = null;
+  private int tileSize = 16;
+  private boolean loaded = false;
+  private char[][] levelArray = null;
   public static int width = 0;
   public static int height = 0;
   
@@ -69,14 +69,16 @@ public class LevelEditor extends JPanel{
     try {
       background1 = ImageIO.read(new File("background1.png"));
       wall1 = ImageIO.read(new File("wall1.png"));
-      wallTopN = ImageIO.read(new File("wallTop1.png"));
+      wallTopN = ImageIO.read(new File("cielingMiddle.png"));
       wallTopBR = ImageIO.read(new File("cielingBottomRight.png"));
       wallTopL = ImageIO.read(new File("cielingLeft.png"));
       wallTopTL = ImageIO.read(new File("cielingTopLeft.png"));
       wallTopTR = ImageIO.read(new File("cielingTopRight.png"));
       character1 = ImageIO.read(new File("character1.png"));
     } catch (IOException e) {
-    } 
+    }
+    
+    selector = new Selector(this);
   } 
   
   @Override
@@ -107,8 +109,6 @@ public class LevelEditor extends JPanel{
   }
   
   public void createLevel(){
-    InputStreamReader r = new InputStreamReader(System.in);
-    BufferedReader br = new BufferedReader(r);
     System.out.println("Enter a file name, then level width, then level height");
     try{
       input = new EditorInput(this, true);
@@ -125,24 +125,16 @@ public class LevelEditor extends JPanel{
     
     try{
       FileWriter fw = new FileWriter(fileName + ".txt");
+      fw.close();
     } catch (Exception e){
       System.out.println("literally how did this even happen");
     }
     levelArray = new char[height][width];
     loaded = true;
   }
-  
-  //I really do appologize for what you're about to see
-  //...
-  //i am very tired
-  //...
-  //i am suffering
-  //..
-  //OK HERE WE GO HAVE FUN
+
   public void loadLevel(){
     //get the file you're going to load
-    InputStreamReader r = new InputStreamReader(System.in);
-    BufferedReader br = new BufferedReader(r);
     
     System.out.println("file to load??");
     
@@ -169,6 +161,7 @@ public class LevelEditor extends JPanel{
         tempHeight++;
       }
       height = tempHeight;
+      br2.close();
     } catch (Exception e){
       System.out.println("LEVEL PROBABLY CANT BE LOADED L M A O");
     }
@@ -190,6 +183,7 @@ public class LevelEditor extends JPanel{
           
         }
         currentLine++;
+        br3.close();
       }
     } catch(Exception e){
       System.out.println("dear god i dont even remember what im doing im just on autopilot here hope it works");
@@ -209,10 +203,10 @@ public class LevelEditor extends JPanel{
     for(int i = 0; i <= height-1; i++){
       for(int j = 0; j <= width-1; j++){
         if(levelArray[i][j] == 'c'){
-          g2d.drawImage(character1,j*LevelEditor.tileSize, i*LevelEditor.tileSize-tileSize,null);
+          g2d.drawImage(character1,j*tileSize, i*tileSize-tileSize,null);
         }
         else if(levelArray[i][j] == 'x'){
-          g2d.drawImage(wall1,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+          g2d.drawImage(wall1,j*tileSize, i*tileSize,null);
         }
         else if(levelArray[i][j] == 't'){
           //First check top of array, then top of wall, then left of array, then left of wall, then bottom right of array, then bottom right of wall, default to neutral.
@@ -220,67 +214,74 @@ public class LevelEditor extends JPanel{
           {
             if(j == 0)
             {
-              g2d.drawImage(wallTopTL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTL,j*tileSize, i*tileSize,null);
             }
             else if(j == (width - 1))
             {
-              g2d.drawImage(wallTopTR,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTR,j*tileSize, i*tileSize,null);
             }
             else if(levelArray[i][j - 1] != 't')
             {
-              g2d.drawImage(wallTopTL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTL,j*tileSize, i*tileSize,null);
             }
             else if(levelArray[i][j + 1] != 't')
             {
-              g2d.drawImage(wallTopTR,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTR,j*tileSize, i*tileSize,null);
             }
             else
             {
-              g2d.drawImage(wallTopN,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopN,j*tileSize, i*tileSize,null);
             }
           }
           else if(levelArray[i - 1][j] != 't')
           {
             if(j == 0)
             {
-              g2d.drawImage(wallTopTL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTL,j*tileSize, i*tileSize,null);
             }
             else if(j == (width - 1))
             {
-              g2d.drawImage(wallTopTR,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTR,j*tileSize, i*tileSize,null);
             }
             else if(levelArray[i][j - 1] != 't')
             {
-              g2d.drawImage(wallTopTL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTL,j*tileSize, i*tileSize,null);
             }
             else if(levelArray[i][j + 1] != 't')
             {
-              g2d.drawImage(wallTopTR,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopTR,j*tileSize, i*tileSize,null);
             }
             else
             {
-              g2d.drawImage(wallTopN,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+              g2d.drawImage(wallTopN,j*tileSize, i*tileSize,null);
             }
           }
           else if(j == 0)
           {
-            g2d.drawImage(wallTopL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+            g2d.drawImage(wallTopL,j*tileSize, i*tileSize,null);
           }
           else if(levelArray[i][j - 1] != 't')
           {
-            g2d.drawImage(wallTopL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+            g2d.drawImage(wallTopL,j*tileSize, i*tileSize,null);
           }
-          else if(i == (height - 1) && j == (width - 1))
+          else if(j == (width - 1))
           {
-            g2d.drawImage(wallTopL,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+            if(i == (height - 1))
+            {
+              g2d.drawImage(wallTopBR,j*tileSize, i*tileSize,null);
+            }
+            else
+            {
+              g2d.drawImage(wallTopN,j*tileSize, i*tileSize,null);
+            }
           }
           else if(levelArray[i][j + 1] != 't' && levelArray[i + 1][j] != 't')
           {
-            g2d.drawImage(wallTopBR,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+            g2d.drawImage(wallTopBR,j*tileSize, i*tileSize,null);
           }
           else
           {
-            g2d.drawImage(wallTopN,j*LevelEditor.tileSize, i*LevelEditor.tileSize,null);
+            g2d.drawImage(wallTopN,j*tileSize, i*tileSize,null);
           }
         } 
       }
@@ -310,4 +311,28 @@ public class LevelEditor extends JPanel{
       System.out.println("Save Failed");
     }
   }
+  
+  public int getTileSize(){
+    return tileSize;
+  }
+  
+  public boolean getLoaded(){
+    return loaded;
+  }
+  
+  public char getLevelArray(int y, int x){
+    return levelArray[y][x];
+  }
+  
+  public void setLevelArray(int y, int x, char c){
+    levelArray[y][x] = c;
+  }
+  
+//  public int getWidth(){
+//    return width;
+//  }
+//  
+//  public int getHeight(){
+//    return height;
+//  }
 }
