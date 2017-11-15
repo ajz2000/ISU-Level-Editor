@@ -37,6 +37,7 @@ public class LevelEditor extends JPanel{
   private char[][] levelArray = null;
   private boolean mouseHeld = false;
   private MouseEvent clicked;
+  private boolean mouseMode = false;
   public static int width = 0;
   public static int height = 0;
   
@@ -64,6 +65,14 @@ public class LevelEditor extends JPanel{
           unload();
         if(e.getKeyCode() == KeyEvent.VK_ENTER)
           save();
+        if(e.getKeyCode() == KeyEvent.VK_Z){
+          if(mouseMode){
+            mouseMode = false;
+          }
+          else{
+            mouseMode = true;
+          }
+        }
       }
     });
     
@@ -116,7 +125,7 @@ public class LevelEditor extends JPanel{
   }
   
   public void updateFrame(){
-    if(mouseHeld){
+    if(mouseHeld && mouseMode){
       selector.mousePressed(clicked);
     }
   }
@@ -159,6 +168,13 @@ public class LevelEditor extends JPanel{
       System.out.println("literally how did this even happen");
     }
     levelArray = new char[height][width];
+    
+    //Fill the array with values to make sure it loads width properly
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < height; j++){
+        levelArray[i][j] = 'o';
+      }
+    }
     loaded = true;
   }
 
@@ -212,8 +228,8 @@ public class LevelEditor extends JPanel{
           
         }
         currentLine++;
-        br3.close();
       }
+      br3.close();
     } catch(Exception e){
       System.out.println("dear god i dont even remember what im doing im just on autopilot here hope it works");
     }
@@ -324,6 +340,7 @@ public class LevelEditor extends JPanel{
     fileName = "";
   }
   public void save(){
+    System.out.println("Saving level");
     try{
       FileWriter fw = new FileWriter(fileName + ".txt");
       PrintWriter pw = new PrintWriter(fw);
@@ -359,6 +376,10 @@ public class LevelEditor extends JPanel{
   
   public boolean getMouseHeld(){
     return mouseHeld;
+  }
+  
+  public boolean getMouseMode(){
+    return mouseMode;
   }
   
 //  public int getWidth(){
