@@ -10,8 +10,7 @@
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener; 
+import java.awt.event.*; 
 import java.io.*;
 import javax.imageio.*;
 import java.awt.Image; 
@@ -36,6 +35,8 @@ public class LevelEditor extends JPanel{
   private int tileSize = 16;
   private boolean loaded = false;
   private char[][] levelArray = null;
+  private boolean mouseHeld = false;
+  private MouseEvent clicked;
   public static int width = 0;
   public static int height = 0;
   
@@ -65,6 +66,26 @@ public class LevelEditor extends JPanel{
           save();
       }
     });
+    
+    addMouseListener(new MouseListener() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+      }
+      @Override
+      public void mouseEntered(MouseEvent e) {
+      }
+      @Override
+      public void mouseExited(MouseEvent e) {
+      }
+      public void mousePressed(MouseEvent e) {
+        clicked = e;
+        mouseHeld = true;
+      }
+      public void mouseReleased(MouseEvent e) {
+        mouseHeld = false;
+      }
+    });
+    
     setFocusable(true); 
     try {
       background1 = ImageIO.read(new File("background1.png"));
@@ -83,6 +104,8 @@ public class LevelEditor extends JPanel{
   
   @Override
   public void paint(Graphics g)  {
+    updateFrame();
+    
     Graphics2D g2d = (Graphics2D) g;
     g2d.setColor(backGroundGreen);
     g2d.fillRect(0,0,1920,1080);
@@ -90,6 +113,12 @@ public class LevelEditor extends JPanel{
     drawArray(g2d);
     selector.draw(g2d);
     
+  }
+  
+  public void updateFrame(){
+    if(mouseHeld){
+      selector.mousePressed(clicked);
+    }
   }
   
   public static void main(String[] args) throws InterruptedException, IOException {
@@ -326,6 +355,10 @@ public class LevelEditor extends JPanel{
   
   public void setLevelArray(int y, int x, char c){
     levelArray[y][x] = c;
+  }
+  
+  public boolean getMouseHeld(){
+    return mouseHeld;
   }
   
 //  public int getWidth(){
