@@ -132,9 +132,18 @@ public class Selector{
   public void fill(char[][] levelArray){
     //Boolean to check when values are found.
     boolean found = false;
+    int left = 0;
+    int rowY =0;
+    
     //First init and find the left of the current row
-    int left = (mouseX - (mouseX % le.getTileSize())) / le.getTileSize();
-    int rowY = (mouseY - (mouseY % le.getTileSize())) / le.getTileSize();
+    if(le.getMouseMode()){
+      left = (mouseX - (mouseX % le.getTileSize())) / le.getTileSize();
+      rowY = (mouseY - (mouseY % le.getTileSize())) / le.getTileSize();
+    }
+    else{
+      left = x;
+      rowY = y;
+    }
     
     //Find the left of the row.
     while(!found){
