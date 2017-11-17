@@ -73,6 +73,9 @@ public class LevelEditor extends JPanel{
             mouseMode = true;
           }
         }
+        if(e.getKeyCode() == KeyEvent.VK_F){
+          selector.fill(levelArray);
+        }
       }
     });
     

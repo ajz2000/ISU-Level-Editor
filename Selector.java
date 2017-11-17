@@ -75,7 +75,7 @@ public class Selector{
     }
   }
   public void draw(Graphics2D g2d){
-
+    
     g2d.setColor(Color.BLACK);
     
     mouseX = ((int)(MouseInfo.getPointerInfo().getLocation().getX())) - ((int)(le.getLocationOnScreen().getX()));
@@ -125,6 +125,132 @@ public class Selector{
       }
       else if(e.getButton() == MouseEvent.BUTTON3){
         le.setLevelArray(colTile[0], colTile[1], 'o');
+      }
+    }
+  }
+  
+  public void fill(char[][] levelArray){
+    //Boolean to check when values are found.
+    boolean found = false;
+    //First init and find the left of the current row
+    int left = (mouseX - (mouseX % le.getTileSize())) / le.getTileSize();
+    int rowY = (mouseY - (mouseY % le.getTileSize())) / le.getTileSize();
+    
+    //Find the left of the row.
+    while(!found){
+      //If x is 0 or the tile to the Left is the same type, the left is found.
+      if(left == 0){
+        found = true;
+      }
+      else if(levelArray[rowY][left - 1] == tileType){
+        found = true;
+      }
+      else{
+        left--;
+      }
+    }
+    
+    //Now init and find the Right of the row to fill.
+    int right = left;
+    
+    //Reset found.
+    found = false;
+    
+    //Find right of row.
+    while(!found){
+      //If x is at the right of the array or the tile to the right is the same type, the right is found.
+      if(right == LevelEditor.width - 1){
+        found = true;
+      }
+      else if(levelArray[rowY][right + 1] == tileType){
+        found = true;
+      }
+      else{
+        right++;
+      }
+    }
+    
+    //Fill the line formed by the two points.
+    for(int j = left; j <= right; j++){
+      levelArray[rowY][j] = tileType;
+      le.setLevelArray(rowY, j, tileType);
+      
+      //If there is a space above that is not the right tile, recursively call fill giving the location to an overloaded method, this also applies if
+      //the tile below(if at the bottom of the fill) is not the right type.
+      if(rowY != 0){
+        if(levelArray[rowY - 1][j] != tileType){
+          fill(levelArray, rowY - 1, j);
+        }
+      }
+      
+      
+      if(rowY != LevelEditor.height - 1){
+        if(levelArray[rowY + 1][j] != tileType){
+          fill(levelArray, rowY + 1, j);
+        }
+      }
+    }
+  }
+  
+  public void fill(char[][] levelArray, int startY, int startX){
+    //Boolean to check when values are found.
+    boolean found = false;
+    //First init and find the left of the current row
+    int left = startX;
+    int rowY = startY;
+    
+    //Find the left of the row.
+    while(!found){
+      //If x is 0 or the tile to the Left is the same type, the left is found.
+      if(left == 0){
+        found = true;
+      }
+      else if(levelArray[rowY][left - 1] == tileType){
+        found = true;
+      }
+      else{
+        left--;
+      }
+    }
+    
+    //Now init and find the Right of the row to fill.
+    int right = left;
+    
+    //Reset found.
+    found = false;
+    
+    //Find right of row.
+    while(!found){
+      //If x is at the right of the array or the tile to the right is the same type, the right is found.
+      if(right == LevelEditor.width - 1){
+        found = true;
+      }
+      else if(levelArray[rowY][right + 1] == tileType){
+        found = true;
+      }
+      else{
+        right++;
+      }
+    }
+    
+    //Fill the line formed by the two points.
+    for(int j = left; j <= right; j++){
+      levelArray[rowY][j] = tileType;
+      le.setLevelArray(rowY, j, tileType);
+      
+      //If there is a space above that is not the right tile, recursively call fill giving the location to an overloaded method, this also applies if
+      //the tile below(if at the bottom of the fill) is not the right type.
+      if(rowY != 0){
+        if(levelArray[rowY - 1][j] != tileType){
+          fill(levelArray, rowY - 1, j);
+        }
+      }
+      
+      
+      if(rowY != LevelEditor.height - 1){
+        if(levelArray[rowY + 1][j] != tileType){
+          fill(levelArray, rowY + 1, j);
+        }
       }
     }
   }
