@@ -11,6 +11,8 @@ public class Selector{
   private Boolean showDebug = false;
   private LevelEditor le;
   private char tileType = 'o';
+  //Holds which tile is being written over, so code doesn't stop when it's filling ceiling with walls if it started on a ceiling
+  private char fillTile = 'o';
   
   public Selector(LevelEditor le){
     this.le = le;
@@ -145,13 +147,16 @@ public class Selector{
       rowY = y;
     }
     
+    //The tile you are writing over
+    fillTile = le.getLevelArray(rowY, left);
+    
     //Find the left of the row.
     while(!found){
       //If x is 0 or the tile to the Left is the same type, the left is found.
       if(left == 0){
         found = true;
       }
-      else if(levelArray[rowY][left - 1] == tileType){
+      else if(levelArray[rowY][left - 1] != fillTile){
         found = true;
       }
       else{
@@ -171,7 +176,7 @@ public class Selector{
       if(right == LevelEditor.width - 1){
         found = true;
       }
-      else if(levelArray[rowY][right + 1] == tileType){
+      else if(levelArray[rowY][right + 1] != fillTile){
         found = true;
       }
       else{
@@ -185,16 +190,16 @@ public class Selector{
       le.setLevelArray(rowY, j, tileType);
       
       //If there is a space above that is not the right tile, recursively call fill giving the location to an overloaded method, this also applies if
-      //the tile below(if at the bottom of the fill) is not the right type.
+      //the tile below is not the right type.
       if(rowY != 0){
-        if(levelArray[rowY - 1][j] != tileType){
+        if(levelArray[rowY - 1][j] == fillTile){
           fill(levelArray, rowY - 1, j);
         }
       }
       
       
       if(rowY != LevelEditor.height - 1){
-        if(levelArray[rowY + 1][j] != tileType){
+        if(levelArray[rowY + 1][j] == fillTile){
           fill(levelArray, rowY + 1, j);
         }
       }
@@ -214,7 +219,7 @@ public class Selector{
       if(left == 0){
         found = true;
       }
-      else if(levelArray[rowY][left - 1] == tileType){
+      else if(levelArray[rowY][left - 1] != fillTile){
         found = true;
       }
       else{
@@ -234,7 +239,7 @@ public class Selector{
       if(right == LevelEditor.width - 1){
         found = true;
       }
-      else if(levelArray[rowY][right + 1] == tileType){
+      else if(levelArray[rowY][right + 1] != fillTile){
         found = true;
       }
       else{
@@ -250,14 +255,14 @@ public class Selector{
       //If there is a space above that is not the right tile, recursively call fill giving the location to an overloaded method, this also applies if
       //the tile below(if at the bottom of the fill) is not the right type.
       if(rowY != 0){
-        if(levelArray[rowY - 1][j] != tileType){
+        if(levelArray[rowY - 1][j] == fillTile){
           fill(levelArray, rowY - 1, j);
         }
       }
       
       
       if(rowY != LevelEditor.height - 1){
-        if(levelArray[rowY + 1][j] != tileType){
+        if(levelArray[rowY + 1][j] == fillTile){
           fill(levelArray, rowY + 1, j);
         }
       }

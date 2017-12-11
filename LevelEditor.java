@@ -109,6 +109,7 @@ public class LevelEditor extends JPanel{
       wallTopTR = ImageIO.read(new File("cielingTopRight.png"));
       character1 = ImageIO.read(new File("character1.png"));
     } catch (IOException e) {
+      System.out.println("Could not load files");
     }
     
     selector = new Selector(this);
